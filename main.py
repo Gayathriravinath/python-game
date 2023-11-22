@@ -10,14 +10,23 @@ my_font = pygame.font.SysFont('Comic Sans MS', 10)
 
 playerLeft = 0
 playerTop = 0
-playerWidth = 100
-playerHeight = 100
+playerWidth = 50
+playerHeight = 50
 ballLeft = 100
 ballTop = 200
 ballWidth = 20
 ballHeight = 20
+obsLeft = 100
+obsTop = 300
+obsWidth = 10
+obsHeight = 10
 score = 0
 
+def create_text(text,position1, position2):
+    text_surface = new_font.render(text , False, (0, 0, 0))
+    screen.blit(text_surface, (position1,position2))
+    pygame.display.flip()
+    time.sleep(10)
 
 while running:
     # poll for events
@@ -29,10 +38,10 @@ while running:
     screen.fill("purple")
 
     # RENDER YOUR GAME HERE
-    # #speed1 = 1
-    # playerLeft = playerLeft + speed1
-    # if playerLeft > 640:
-    #     playerLeft = 0
+    speed = 5
+    obsLeft = obsLeft + speed
+    if obsLeft > 640:
+       obsLeft = 0
 
     # speed2 = 4  
     # playerTop = playerTop + speed2
@@ -57,9 +66,19 @@ while running:
         b = 400
         ballTop = random.randint(a,b)
         ballLeft = random.randint(a,b)
-        score = score + 50
+        score = score + 10
+
+    if (playerLeft + playerWidth > obsLeft and playerLeft < obsLeft + obsWidth and
+        playerTop + playerHeight > obsTop and playerTop < obsTop + obsHeight):
+        
+    
+
+        create_text("Game over",200, 400)
+        break
+
     pygame.draw.rect(screen, pygame.Color(255, 0, 0), pygame.Rect(playerLeft, playerTop, playerWidth, playerHeight))
     pygame.draw.rect(screen, pygame.Color(0, 255, 0), pygame.Rect(ballLeft, ballTop, ballWidth, ballHeight))
+    pygame.draw.rect(screen, pygame.Color(0, 0, 150), pygame.Rect(obsLeft, obsTop, obsWidth, obsHeight))
 
     text_surface = my_font.render('your score = %i' % score, False, (0, 0, 0))
     screen.blit(text_surface, (540,5))
@@ -67,16 +86,13 @@ while running:
     new_font = pygame.font.SysFont('Comic Sans MS', 50)
 
 
-
+    if (playerTop > 480 - playerHeight or playerTop < 0 or playerLeft > 640 - playerWidth or playerLeft <0):
+      create_text("Game over",200, 400)
+      break
 
     if score == 100:
-        text_surface = new_font.render('you win' , False, (0, 0, 0))
-        screen.blit(text_surface, (300,200))
-        pygame.display.flip()
-        print("You win")
-        time.sleep(10)
-    
-        break
+      create_text("You win",400,10)
+      break
 
     # flip() the display to put your work on screen
     pygame.display.flip()
